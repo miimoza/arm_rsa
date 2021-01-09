@@ -1,0 +1,27 @@
+Projet final
+
+Le projet à réaliser reprend en grande partie ce qui a déjà été fait dans les différents niveaux, et donne surtout un cadre applicatif aux différentes notions abordées.
+
+L'objectif est de réaliser un appareil de signature RSA.
+
+Le MCU sera chargé avec un bootloader, qui aura les fonctionnalités suivantes:
+
+    vérifie que le logiciel à démarrer est authentifié (signé)
+    met à jour le logiciel à démarrer de manière sécurisée (i.e. on ne dois pas pouvoir mettre un binaire arbitraire en flash)
+    démarre le logiciel en flash s'il est valide
+
+Le logiciel à démarrer aura les fonctionnalités suivantes:
+
+    génère une clé privée RSA (une et une seule fois)
+    exporte sur l'UART la clé publique associée
+    signe un hash (sha-256) fourni via l'UART avec la clé privée
+    protège l'utilisation de la clé privée par un mot de passe
+    aucune opération n'est possible tant qu'un mot de passe n'a pas été configuré
+
+Vous devrez proposer un protocol UART pour utiliser les 4 fonctionnalités ci-dessus.
+
+Bonus possibles (si vous avez du temps et/ou l'envie):
+
+    ajouter une fonctionnalité de gestionnaire de mot de passe
+    utilisation de l'interface USB à la place de l'interface UART (en implémentant la classe CDC)
+    proposition de sécurisation des données secrètes
