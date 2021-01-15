@@ -1,3 +1,12 @@
+- FINIR TD
+- genere une cle RSA
+- signe un hash (sha-256)
+- protege l'utilisation de la cle privee par un mot de passe
+
+
+
+
+
 Projet final
 
 Le projet à réaliser reprend en grande partie ce qui a déjà été fait dans les différents niveaux, et donne surtout un cadre applicatif aux différentes notions abordées.
