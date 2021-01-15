@@ -207,4 +207,3 @@ uint32_t vector_table[128] __attribute__((section(".isr_vector"))) = {
 	(uint32_t) 0,
 	(uint32_t) spi4_handler,
 };
-
