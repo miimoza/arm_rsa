@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -pedantic -std=c99 -lsodium 
+CFLAGS = -Wall -Wextra -pedantic -std=c99 -lsodium
 CLIBS = -lsodium
 OBJS = rsa.o
 
@@ -9,4 +9,4 @@ all: rsa
 check: all
 	./rsa
 clean:
-	rm -rf $(OBJS) rsa.o
+	rm -rf $(OBJS) rsa
