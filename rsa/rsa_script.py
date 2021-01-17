@@ -35,7 +35,8 @@ def main(argv):
 
     if (argv[1] == "public"):
         s.write("PUB".encode())
-        print("public")
+
+        print(readline(s))
 
     s.close()
 

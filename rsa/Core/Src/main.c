@@ -62,10 +62,14 @@ static void MX_USART2_UART_Init(void);
 #define CMD_SIZE 3
 #define HASH_SIZE 32
 #define PASS_SIZE 64
+
 #define PASSPHRASE "ronaldo"
-//char data[10];
-//char data1[] = "RSA encrypted SHA256: \n";
-//char data2[] = "PIPI\n";
+#define PASSPHRASE_LENGTH 7
+
+#define PUBLIC_KEY "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDpLqjDJ80vefVarmhC4L15Nbfb\npSiPCdEVMX7yZEVnXJVdWpafHDJhPwR9aK9y35Qg/dgzCeKuHHH/pbFaOk0YYqMp\n+NvyG57Cz37gxhXiBtOr2rOYKlQfvnQFam+Z9AUZLv0pVT5lR42X1QRi0XqP4X7W\nE4dLiIcD3kXqgjeFwwIDAQAB\n-----END PUBLIC KEY-----"
+#define PUBLIC_KEY_LENGTH 271
+#define PRIVATE_KEY "-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDpLqjDJ80vefVarmhC4L15NbfbpSiPCdEVMX7yZEVnXJVdWpaf\nHDJhPwR9aK9y35Qg/dgzCeKuHHH/pbFaOk0YYqMp+NvyG57Cz37gxhXiBtOr2rOY\nKlQfvnQFam+Z9AUZLv0pVT5lR42X1QRi0XqP4X7WE4dLiIcD3kXqgjeFwwIDAQAB\nAoGAUAZ61YsF0IrW6NmdH4KYlA4a/K74NerFDjRv4EkIRppQCntJ4O4g3h3t8Qop\n2E8hu5bSiWWVnXJWr0lSjegfR5zXFM7JyLTNx9yYnKuS0HnfzV1ytPw/QfsWyPP5\nGP8csRZoYYgiqIOIzL98upV+8kh5Tv4lKcjIlFsooLKYcXECQQDrr7iS7TBdGDjY\neoRfOh6BnSaRJKsDKeiGRdUv+0eyP7pFTnDQzxADGTAtcwYo9feDww+1ZbrioAHQ\ncj/m/a2RAkEA/Uevi7nNQCInHmBmKl5a/yEBfFglK5+4v85ldw7D2+qTlQ6fA/3e\nf7kqoFQ+vOiZwuhhsZmMzTBtMNgOTKdkEwJBANsWELR7yf5v+r+5O/2tcBg6dlRr\nypB5T44psiAVLLOUq9mrLhHcuVy3+GH3T52Z78jK9XpBI7Vw2d7jpWVbIRECQQDe\n0Yze+HNYA3O0povapC2bmzbKZGU27onCu9nJlsS5mLGDBVzhTxrJ9GVKrTKQUHTM\n4lDnxDT5Yqv8t2ZFC1HfAkEAlQ2jCShH68umJlzfEseIjiuhuEmHgBukCQFBZq2Z\ns475Y6eO8nxR3SsbNxZrre6VLm+4EBDwiZ6oWAg5RPpzrQ==\n-----END RSA PRIVATE KEY-----"
+#define PRIVATE_KEY_LENGTH 890
 /* USER CODE END 0 */
 
 /**
@@ -123,7 +127,7 @@ int main(void)
           HAL_UART_Receive(&huart2, passphrase, PASS_SIZE, HAL_MAX_DELAY);
 
           if (strlen(hash) > 0) {
-              if (!strcmp(passphrase, PASSPHRASE)) {
+              if (!strncmp(passphrase, PASSPHRASE, PASSPHRASE_LENGTH + 1)) {
                   HAL_UART_Transmit(&huart2, "CORRECT PASSPHRASE", 19, HAL_MAX_DELAY);
                   // rsa encrypt here
                   HAL_UART_Transmit(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
@@ -132,8 +136,9 @@ int main(void)
                   HAL_UART_Transmit(&huart2, "WRONG PASSPHRASE", 21, HAL_MAX_DELAY);
               }
           }
-      } else if (!strcmp(command, "PUB")) {
-
+      } else if (!strncmp(command, "PUB", 3)) {
+          HAL_UART_Transmit(&huart2, PUBLIC_KEY, PUBLIC_KEY_LENGTH, HAL_MAX_DELAY);
+          HAL_UART_Transmit(&huart2, "\0", 1, HAL_MAX_DELAY);
       }
 
   }
