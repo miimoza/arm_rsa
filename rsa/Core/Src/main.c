@@ -59,7 +59,7 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define HASH_SIZE 64
+#define HASH_SIZE 32
 #define PASS_SIZE 64
 #define PASSPHRASE "ronaldo"
 //char data[10];
@@ -119,14 +119,12 @@ int main(void)
 
       if (strlen(hash) > 0) {
         if (!strcmp(passphrase, PASSPHRASE)) {
-            HAL_UART_Transmit(&huart2, "CORRECT PASSPHRASE", 18, HAL_MAX_DELAY);
-            HAL_UART_Transmit(&huart2, "\n", 1, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&huart2, "CORRECT PASSPHRASE\n", 19, HAL_MAX_DELAY);
             // rsa encrypt here
             HAL_UART_Transmit(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
             HAL_UART_Transmit(&huart2, "\n", 1, HAL_MAX_DELAY);
         } else {
-            HAL_UART_Transmit(&huart2, "WRONG PASSPHRASE", 20, HAL_MAX_DELAY);
-            HAL_UART_Transmit(&huart2, "\n", 1, HAL_MAX_DELAY);
+            HAL_UART_Transmit(&huart2, "WRONG PASSPHRASE\n", 21, HAL_MAX_DELAY);
         }
       }
 
@@ -156,7 +154,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 84;
+  RCC_OscInitStruct.PLL.PLLN = 64;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -168,11 +166,11 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }

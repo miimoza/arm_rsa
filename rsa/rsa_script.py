@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
 
-import signal
-import sys
-import struct
-import os.path
-from time import sleep
-
+import hashlib
+import getpass
 from serial import Serial, SerialException
 
-def main():
+def readline(file):
+    line = ""
+    while 1:
+        char = file.read(1)
+        if char == b'\n':
+            break
+        line += char.decode("utf-8")
+    return line
 
-    sha256 = bytearray([0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0x10,
-        0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0x10,
-        0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0x10,
-        0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0x10,
-        0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0x10,
-        0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0x10,
-        0x1, 0x2, 0x3, 0x4])
+def sendpassword(s, upass):
+    s.write(str.encode(upass))
+    s.write(str.encode("\x00" * (64 - len(upass))))
+
+def main():
+    sha256 = hashlib.sha256("ahah".encode('utf-8')).digest()
 
     try:
         s = Serial(port='/dev/ttyACM0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=None, xonxoff=0, rtscts=0)
@@ -25,11 +27,16 @@ def main():
         exit()
 
     s.write(sha256)
-    s.write(str.encode("ronaldo\x00"))
+    passphrase = getpass.getpass("passphrase: ")
+    sendpassword(s, passphrase)
 
-    status = s.readline().decode()
+    status = readline(s)
     print(status)
 
     if (status == "CORRECT PASSPHRASE"):
         print("Encrypted sha256:", s.readline())
-main()
+
+    s.close()
+
+if __name__ == "__main__":
+    main()
