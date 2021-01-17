@@ -124,8 +124,7 @@ int main(void)
             // rsa encrypt here
             HAL_UART_Transmit(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
             HAL_UART_Transmit(&huart2, "\n", 1, HAL_MAX_DELAY);
-        }
-        else {
+        } else {
             HAL_UART_Transmit(&huart2, "WRONG PASSPHRASE", 20, HAL_MAX_DELAY);
             HAL_UART_Transmit(&huart2, "\n", 1, HAL_MAX_DELAY);
         }
