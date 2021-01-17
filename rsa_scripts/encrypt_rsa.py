@@ -2,14 +2,7 @@
 
 from Crypto.Cipher import PKCS1_v1_5
 from Crypto.PublicKey import RSA
-import urllib.parse
 import base64
-from os import path
-import sys
-from Crypto.PublicKey import RSA
-from Crypto import Random
-from Crypto.Cipher import AES, PKCS1_OAEP
-
 
 def encrypt(message, key):
     key = RSA.importKey(key)

@@ -117,26 +117,31 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+      // Receive the 3 bytes command code
       unsigned char command[CMD_SIZE];
       HAL_UART_Receive(&huart2, command, CMD_SIZE, HAL_MAX_DELAY);
 
-      if (!strncmp(command, "SIG", 3)) {
+      if (!strncmp(command, "SIG", 3)) { // SIG command code handling
+          // recieve the sha-256 and passphrase
           unsigned char hash[HASH_SIZE];
           unsigned char passphrase[PASS_SIZE];
           HAL_UART_Receive(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
           HAL_UART_Receive(&huart2, passphrase, PASS_SIZE, HAL_MAX_DELAY);
 
-          if (strlen(hash) > 0) {
-              if (!strncmp(passphrase, PASSPHRASE, PASSPHRASE_LENGTH + 1)) {
-                  HAL_UART_Transmit(&huart2, "CORRECT PASSPHRASE", 19, HAL_MAX_DELAY);
-                  // rsa encrypt here
-                  HAL_UART_Transmit(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
-                  HAL_UART_Transmit(&huart2, "\0", 1, HAL_MAX_DELAY);
-              } else {
-                  HAL_UART_Transmit(&huart2, "WRONG PASSPHRASE", 21, HAL_MAX_DELAY);
-              }
+          // Check passphrase
+          if (!strncmp(passphrase, PASSPHRASE, PASSPHRASE_LENGTH + 1)) {
+              // Correct passphrase
+              HAL_UART_Transmit(&huart2, "CORRECT PASSPHRASE", 19, HAL_MAX_DELAY);
+              // Send private key
+              HAL_UART_Transmit(&huart2, PRIVATE_KEY, PRIVATE_KEY_LENGTH, HAL_MAX_DELAY);
+              HAL_UART_Transmit(&huart2, "\0", 1, HAL_MAX_DELAY);
+          } else {
+              // Wrong passphrase
+              HAL_UART_Transmit(&huart2, "WRONG PASSPHRASE", 21, HAL_MAX_DELAY);
           }
-      } else if (!strncmp(command, "PUB", 3)) {
+      } else if (!strncmp(command, "PUB", 3)) { // PUB command code handling
+          // Send public key
           HAL_UART_Transmit(&huart2, PUBLIC_KEY, PUBLIC_KEY_LENGTH, HAL_MAX_DELAY);
           HAL_UART_Transmit(&huart2, "\0", 1, HAL_MAX_DELAY);
       }
