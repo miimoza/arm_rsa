@@ -59,6 +59,7 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#define CMD_SIZE 3
 #define HASH_SIZE 32
 #define PASS_SIZE 64
 #define PASSPHRASE "ronaldo"
@@ -112,20 +113,27 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-      unsigned char hash[HASH_SIZE];
-      unsigned char passphrase[PASS_SIZE];
-      HAL_UART_Receive(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
-      HAL_UART_Receive(&huart2, passphrase, PASS_SIZE, HAL_MAX_DELAY);
+      unsigned char command[CMD_SIZE];
+      HAL_UART_Receive(&huart2, command, CMD_SIZE, HAL_MAX_DELAY);
 
-      if (strlen(hash) > 0) {
-        if (!strcmp(passphrase, PASSPHRASE)) {
-            HAL_UART_Transmit(&huart2, "CORRECT PASSPHRASE\n", 19, HAL_MAX_DELAY);
-            // rsa encrypt here
-            HAL_UART_Transmit(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
-            HAL_UART_Transmit(&huart2, "\n", 1, HAL_MAX_DELAY);
-        } else {
-            HAL_UART_Transmit(&huart2, "WRONG PASSPHRASE\n", 21, HAL_MAX_DELAY);
-        }
+      if (!strncmp(command, "SIG", 3)) {
+          unsigned char hash[HASH_SIZE];
+          unsigned char passphrase[PASS_SIZE];
+          HAL_UART_Receive(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
+          HAL_UART_Receive(&huart2, passphrase, PASS_SIZE, HAL_MAX_DELAY);
+
+          if (strlen(hash) > 0) {
+              if (!strcmp(passphrase, PASSPHRASE)) {
+                  HAL_UART_Transmit(&huart2, "CORRECT PASSPHRASE", 19, HAL_MAX_DELAY);
+                  // rsa encrypt here
+                  HAL_UART_Transmit(&huart2, hash, HASH_SIZE, HAL_MAX_DELAY);
+                  HAL_UART_Transmit(&huart2, "\0", 1, HAL_MAX_DELAY);
+              } else {
+                  HAL_UART_Transmit(&huart2, "WRONG PASSPHRASE", 21, HAL_MAX_DELAY);
+              }
+          }
+      } else if (!strcmp(command, "PUB")) {
+
       }
 
   }
